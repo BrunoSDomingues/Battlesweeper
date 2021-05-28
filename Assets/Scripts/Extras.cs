@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MakeBoard : MonoBehaviour {
+public class Extras : MonoBehaviour
+{
+    
+    public bool canShow;
 
-
-    void Start() {
+    void Start()
+    {
 
     }
 
     // Update is called once per frame
-    void Update() {
-
+    void Update()
+    {
+        
     }
 }
