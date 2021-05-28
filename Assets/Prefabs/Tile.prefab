@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 4683039920485318962}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -111,9 +111,9 @@ MonoBehaviour:
   - {fileID: -6531715768693977605, guid: a05c273dafe02e74aa421ea9050ee82a, type: 3}
   - {fileID: 5387976621439405212, guid: a05c273dafe02e74aa421ea9050ee82a, type: 3}
   - {fileID: -8391569690387275066, guid: a05c273dafe02e74aa421ea9050ee82a, type: 3}
-  tileType: 0
-  show: 0
+  shown: 0
   flag: 0
+  minesNear: 0
 --- !u!61 &4683039920485318966
 BoxCollider2D:
   m_ObjectHideFlags: 0
