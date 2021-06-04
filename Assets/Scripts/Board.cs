@@ -148,7 +148,7 @@ public class Board : MonoBehaviour
         if (!powerup) return;
         else if (p == Power.ShowBoard) StartCoroutine(QuickShow());
         else if (p == Power.RemoveFlags) RemoveFlags();
-        // else if (p == Power.InvertControls) InvertControls();
+        // else if (p == Power.InvertControls) StartCoroutine(InvertControls());
     }
 
     public void RemoveFlags()
@@ -158,6 +158,11 @@ public class Board : MonoBehaviour
                 if (board[i][j].flag)
                     board[i][j].ToggleFlag();               
     }
+
+    //IEnumerator InvertControls()
+    //{
+    //}
+
 
     IEnumerator QuickShow()
     {
@@ -224,11 +229,11 @@ public class Board : MonoBehaviour
             PowerUp(Power.RemoveFlags);
         }
 
-        //else if (Input.GetKeyDown(KeyCode.Alpha3))
-        //{
-        //    powerup = true;
-        //    powers.Remove(Power.InvertControls);
-        //    PowerUp(Power.InvertControls);
-        //}
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            powerup = true;
+            powers.Remove(Power.InvertControls);
+            PowerUp(Power.InvertControls);
+        }
     }
 }
