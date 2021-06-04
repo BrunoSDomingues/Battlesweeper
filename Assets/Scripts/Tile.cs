@@ -41,7 +41,7 @@ public class Tile : MonoBehaviour
         x = x_;
         y = y_;
 
-        transform.position = new Vector3(x * sr.bounds.size.x, -y * sr.bounds.size.y, 0);
+        transform.position += new Vector3(x * sr.bounds.size.x, -y * sr.bounds.size.y, 0);
     }
 
     private void Awake()

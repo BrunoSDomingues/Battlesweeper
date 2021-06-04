@@ -2,6 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// ShowBoard cannot be called before first click, need to check
+public enum Power
+{
+    ShowBoard = 1,
+    RemoveFlags = 2,
+    InvertControls = 3
+};
+
 public class Board : MonoBehaviour
 {
     [SerializeField]
@@ -13,10 +21,13 @@ public class Board : MonoBehaviour
     private int height;
     private int nMines;
 
+    public bool powerup = true;
+    public List<Power> powers = new List<Power>();
     private bool firstClick = true;
     private bool gameOver = false;
     public int lives = 3;
-    public bool powerup = false;
+
+
     public List<Vector2Int> tiles, flags;
 
     public void New(int width_, int height_, int nMines_)
@@ -26,6 +37,9 @@ public class Board : MonoBehaviour
         nMines = nMines_;
 
         // No need to place mines before first click
+        powers.Add(Power.ShowBoard);
+        for (int i = 0; i < 2; i++) powers.Add(Power.RemoveFlags);
+        for (int i = 0; i < 3; i++) powers.Add(Power.InvertControls);
         CreateBoard();
     }
 
@@ -75,7 +89,7 @@ public class Board : MonoBehaviour
             board.Add(new List<Tile>());
             for (int j = 0; j < width; j++)
             {
-                GameObject obj = Instantiate(TileObject);
+                GameObject obj = Instantiate(TileObject, transform);
                 Tile t = obj.GetComponent<Tile>();
                 t.New(this, i, j);
                 // TODO set position
@@ -129,14 +143,24 @@ public class Board : MonoBehaviour
                 board[i][j].Reveal();
     }
 
-    public void PowerUp()
+    public void PowerUp(Power p)
     {
         if (!powerup) return;
-        StartCoroutine(QuickShow());
+        else if (p == Power.ShowBoard) StartCoroutine(QuickShow());
+        else if (p == Power.RemoveFlags) RemoveFlags();
+        // else if (p == Power.InvertControls) InvertControls();
+    }
+
+    public void RemoveFlags()
+    {
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if (board[i][j].flag)
+                    board[i][j].ToggleFlag();               
     }
 
     IEnumerator QuickShow()
-    {        
+    {
         tiles = new List<Vector2Int>();
         flags = new List<Vector2Int>();
         for (int i = 0; i < height; i++)
@@ -178,17 +202,33 @@ public class Board : MonoBehaviour
 
     private void Start()
     {
-        New(16, 30, 99);
+        // New(16, 30, 99);
         // New(16, 30, 10);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
         {
+            Debug.Log("pressed 1");
             powerup = true;
-            Debug.Log("pzou " + powerup);
-            PowerUp();
+            powers.Remove(Power.ShowBoard);
+            PowerUp(Power.ShowBoard);
         }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        {
+            Debug.Log("pressed 2");
+            powerup = true;
+            powers.Remove(Power.RemoveFlags);
+            PowerUp(Power.RemoveFlags);
+        }
+
+        //else if (Input.GetKeyDown(KeyCode.Alpha3))
+        //{
+        //    powerup = true;
+        //    powers.Remove(Power.InvertControls);
+        //    PowerUp(Power.InvertControls);
+        //}
     }
 }
