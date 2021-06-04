@@ -17,10 +17,4 @@ public class MakeBoards : MonoBehaviour
         var b2 = Instantiate(board, new Vector3(1, 3, 0), Quaternion.identity);
         b2.GetComponent<Board>().New(16, 16, 40);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
