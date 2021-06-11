@@ -8,7 +8,6 @@ public class Menu : MonoBehaviour
 {
     public void Play()
     {
-        Debug.Log("loading play...");
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("ModeSelection");
     }
 }

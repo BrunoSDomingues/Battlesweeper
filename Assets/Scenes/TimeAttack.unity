@@ -157,7 +157,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.1981132, g: 0.17755428, b: 0.17755428, a: 1}
+  m_BackGroundColor: {r: 0.47843137, g: 0.6, b: 0.7921569, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -315,6 +315,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   board: {fileID: 4929211270570482231, guid: 787b9d0885190514cadf28f95e9651da, type: 3}
   timer: {fileID: 1456423571}
+  b1: {fileID: 0}
+  b2: {fileID: 0}
   isTA: 0
   message: 
 --- !u!1 &1456423571
@@ -362,6 +364,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timer: 0
   isEnabled: 0
+  e1: 0
+  e2: 0
 --- !u!1001 &4150722124728571148
 PrefabInstance:
   m_ObjectHideFlags: 0
