@@ -68,7 +68,6 @@ public class Controller : MonoBehaviour
             if (!player) b1.RemoveFlags();
             else b2.RemoveFlags();
         }
-        else Debug.Log("this should not exist");
     }
 
     private void OnDisable()

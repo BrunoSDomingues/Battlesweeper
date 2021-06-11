@@ -94,7 +94,6 @@ public class Board : MonoBehaviour
         if (controller.isTA)
         {
             lives = 1;
-            Debug.Log("timeattack");
             p1.enabled = false;
             p2.enabled = false;
             p3.enabled = false;
@@ -198,7 +197,6 @@ public class Board : MonoBehaviour
             {
                 controller.bomb.Play();
                 lives--;
-                Debug.Log("lives: " + lives);
                 if (lives == 0)
                 {
                     controller.GameOver(player, false);
