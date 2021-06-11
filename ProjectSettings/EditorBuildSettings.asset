@@ -9,6 +9,18 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 5c74af07614a6a1478020bb074bcd974
   - enabled: 1
+    path: Assets/Scenes/Controls.unity
+    guid: 984e4173123bf1b4e83a6b11c5e2a90d
+  - enabled: 1
+    path: Assets/Scenes/ModeSelection.unity
+    guid: fcacffa2aa713494e8d3d3271aaf32bb
+  - enabled: 1
     path: Assets/Scenes/Arcade.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/TimeAttack.unity
+    guid: 5bb2a4207818f654d905985855d7ca32
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 9322148f9e355b94294ff4530e341412
   m_configObjects: {}

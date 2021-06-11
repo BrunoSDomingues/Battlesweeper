@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 // ShowBoard cannot be called before first click, need to check
 public enum Power
@@ -28,8 +28,13 @@ public class Board : MonoBehaviour
     private int nMines;
     private bool player;
 
+    public int n1, n2, n3;
+
     public bool powerup = true;
     public List<Power> powers = new List<Power>();
+
+    public Text p1, p2, p3, nLives;
+
     private bool firstClick = true;
     public bool gameOver = false;
     public int lives;
@@ -41,13 +46,18 @@ public class Board : MonoBehaviour
 
     public List<Vector2Int> tiles, flags;
 
-    public void New(int width_, int height_, int nMines_, bool player_, Controller controller_)
+    public void New(int width_, int height_, int nMines_, bool player_, Controller controller_, Text p1_, Text p2_, Text p3_, Text nLives_)
     {
         width = width_;
         height = height_;
         nMines = nMines_;
         player = player_;
         controller = controller_;
+
+        p1 = p1_;
+        p2 = p2_;
+        p3 = p3_;
+        nLives = nLives_;
 
         // No need to place mines before first click
         CreateBoard();
@@ -64,7 +74,7 @@ public class Board : MonoBehaviour
             lclick = KeyCode.Q;
             rclick = KeyCode.E;
 
-            cursor = Instantiate(pcursor1, new Vector3(-7, 3, 0), Quaternion.identity);
+            cursor = Instantiate(pcursor1, new Vector3(-8, 3, 0), Quaternion.identity);
         }
         else
         {
@@ -78,19 +88,33 @@ public class Board : MonoBehaviour
             lclick = KeyCode.U;
             rclick = KeyCode.O;
 
-            cursor = Instantiate(pcursor2, new Vector3(1, 3, 0), Quaternion.identity);
+            cursor = Instantiate(pcursor2, new Vector3(2, 3, 0), Quaternion.identity);
         }
 
-        if (controller.isTA) lives = 1;
+        if (controller.isTA)
+        {
+            lives = 1;
+            Debug.Log("timeattack");
+            p1.enabled = false;
+            p2.enabled = false;
+            p3.enabled = false;
+        }
+
         else
         {
             lives = 3;
 
+            p1.enabled = true;
+            p2.enabled = true;
+            p3.enabled = true;
+
             powers.Add(Power.ShowBoard);
+            n1 = 1;
             for (int i = 0; i < 2; i++) powers.Add(Power.RemoveFlags);
+            n2 = 2;
             for (int i = 0; i < 3; i++) powers.Add(Power.InvertControls);
+            n3 = 3;
         }
-            
     }
 
     private void SetMines(int x, int y)
@@ -214,19 +238,31 @@ public class Board : MonoBehaviour
         else if (p == Power.ShowBoard)
         {
             r1 = powers.Remove(p);
-            if (r1) StartCoroutine(QuickShow());
+            if (r1)
+            {
+                n1--;
+                StartCoroutine(QuickShow());
+            }
         }
 
         else if (p == Power.RemoveFlags)
         {
             r2 = powers.Remove(p);
-            if (r2) controller.PowerUp(player, p);
+            if (r2)
+            {
+                n2--;
+                controller.PowerUp(player, p);
+            }
         }
 
         else if (p == Power.InvertControls)
         {
             r3 = powers.Remove(p);
-            if (r3) controller.PowerUp(player, p);
+            if (r3)
+            {
+                n3--;
+                controller.PowerUp(player, p);
+            }
         }
             
     }
@@ -279,11 +315,8 @@ public class Board : MonoBehaviour
                     board[i][j].flag = false;
                 }
 
-        Debug.Log("revelou");
         RevealAll();
-        Debug.Log("ativou");
         yield return new WaitForSeconds(2);
-        Debug.Log("acabou");
 
         for (int i = 0; i < height; i++)
             for (int j = 0; j < width; j++)
@@ -304,14 +337,10 @@ public class Board : MonoBehaviour
 
     public bool Contains(Vector2Int pos) => Contains(pos.x, pos.y);
 
-    private void Start()
-    {
-        // New(16, 30, 99);
-        // New(16, 30, 10);
-    }
-
     private void Update()
     {
+        nLives.text = "Lives: " + lives;
+
         if (gameOver) return;
 
         if (Input.GetKeyDown(up) && pos.y != 0)
@@ -332,7 +361,7 @@ public class Board : MonoBehaviour
             cursor.transform.position = transform.position + new Vector3(pos.x, -pos.y, 0) * 0.4f;
         }
 
-        else if (Input.GetKeyDown(right) && pos.x != -width + 1)
+        else if (Input.GetKeyDown(right) && pos.x != width - 1)
         {
             pos.x += 1;
             cursor.transform.position = transform.position + new Vector3(pos.x, -pos.y, 0) * 0.4f;
@@ -349,25 +378,29 @@ public class Board : MonoBehaviour
         }
         
 
-        if (Input.GetKeyDown(power1))
+        if (!controller.isTA)
         {
-            Debug.Log("pressed power1");
-            powerup = true;
-            PowerUp(Power.ShowBoard);
-        }
+            p1.text = "Show: " + n1;
+            p2.text = "Remove: " + n2;
+            p3.text = "Invert: " + n3;
 
-        else if (Input.GetKeyDown(power2))
-        {
-            Debug.Log("pressed power2");
-            powerup = true;
-            PowerUp(Power.RemoveFlags);
-        }
+            if (Input.GetKeyDown(power1))
+            {
+                powerup = true;
+                PowerUp(Power.ShowBoard);
+            }
 
-        else if (Input.GetKeyDown(power3))
-        {
-            Debug.Log("pressed power3");
-            powerup = true;
-            PowerUp(Power.InvertControls);
-        }
+            else if (Input.GetKeyDown(power2))
+            {
+                powerup = true;
+                PowerUp(Power.RemoveFlags);
+            }
+
+            else if (Input.GetKeyDown(power3))
+            {
+                powerup = true;
+                PowerUp(Power.InvertControls);
+            }
+        }       
     }
 }
