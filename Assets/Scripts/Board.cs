@@ -15,32 +15,73 @@ public class Board : MonoBehaviour
     [SerializeField]
     private GameObject TileObject;
 
+    [SerializeField]
+    private GameObject pcursor1, pcursor2;
+
+    private GameObject cursor;
+
     public List<List<Tile>> board = new List<List<Tile>>();
     private List<Vector2Int> available = new List<Vector2Int>();
     private int width;
     private int height;
     private int nMines;
+    private bool player;
 
     public bool powerup = true;
     public List<Power> powers = new List<Power>();
     private bool firstClick = true;
-    private bool gameOver = false;
+    public bool gameOver = false;
     public int lives = 3;
 
+    private Vector2Int pos = new Vector2Int();
+
+    private KeyCode up, down, left, right, power1, power2, power3, lclick, rclick;
+    private Controller controller;
 
     public List<Vector2Int> tiles, flags;
 
-    public void New(int width_, int height_, int nMines_)
+    public void New(int width_, int height_, int nMines_, bool player_, Controller controller_)
     {
         width = width_;
         height = height_;
         nMines = nMines_;
+        player = player_;
+        controller = controller_;
 
         // No need to place mines before first click
         powers.Add(Power.ShowBoard);
         for (int i = 0; i < 2; i++) powers.Add(Power.RemoveFlags);
         for (int i = 0; i < 3; i++) powers.Add(Power.InvertControls);
         CreateBoard();
+
+        if (player)
+        {
+            up = KeyCode.W;
+            down = KeyCode.S;
+            left = KeyCode.A;
+            right = KeyCode.D;
+            power1 = KeyCode.Alpha1;
+            power2 = KeyCode.Alpha2;
+            power3 = KeyCode.Alpha3;
+            lclick = KeyCode.Q;
+            rclick = KeyCode.E;
+
+            cursor = Instantiate(pcursor1, new Vector3(-7, 3, 0), Quaternion.identity);
+        }
+        else
+        {
+            up = KeyCode.I;
+            down = KeyCode.K;
+            left = KeyCode.J;
+            right = KeyCode.L;
+            power1 = KeyCode.Alpha8;
+            power2 = KeyCode.Alpha9;
+            power3 = KeyCode.Alpha0;
+            lclick = KeyCode.U;
+            rclick = KeyCode.O;
+
+            cursor = Instantiate(pcursor2, new Vector3(1, 3, 0), Quaternion.identity);
+        }
     }
 
     private void SetMines(int x, int y)
@@ -91,8 +132,8 @@ public class Board : MonoBehaviour
             {
                 GameObject obj = Instantiate(TileObject, transform);
                 Tile t = obj.GetComponent<Tile>();
+                
                 t.New(this, i, j);
-                // TODO set position
 
                 board[i].Add(t);
                 available.Add(new Vector2Int(i, j));
@@ -110,14 +151,17 @@ public class Board : MonoBehaviour
         }
         if (board[x][y].mine)
         {
-            lives--;
-            Debug.Log("lives: " + lives);
-            if (lives == 0)
+            if (!board[x][y].shown)
             {
-                gameOver = true;
-                RevealAll();
+                lives--;
+                Debug.Log("lives: " + lives);
+                if (lives == 0)
+                {
+                    controller.GameOver(player);
+                    RevealAll();
+                }
+                else board[x][y].Reveal();
             }
-            else board[x][y].Reveal();
         }
         else
         {
@@ -128,7 +172,7 @@ public class Board : MonoBehaviour
                     if (!board[i][j].mine && !board[i][j].shown) cond = false;
             if (cond)
             {
-                gameOver = true;
+                controller.GameOver(!player);
                 for (int i = 0; i < height; i++)
                     for (int j = 0; j < width; j++)
                         if (board[i][j].mine && !board[i][j].flag) board[i][j].ToggleFlag();
@@ -147,8 +191,8 @@ public class Board : MonoBehaviour
     {
         if (!powerup) return;
         else if (p == Power.ShowBoard) StartCoroutine(QuickShow());
-        else if (p == Power.RemoveFlags) RemoveFlags();
-        // else if (p == Power.InvertControls) StartCoroutine(InvertControls());
+        else if (p == Power.RemoveFlags) controller.PowerUp(player, p);
+        else if (p == Power.InvertControls) controller.PowerUp(player, p);
     }
 
     public void RemoveFlags()
@@ -159,9 +203,28 @@ public class Board : MonoBehaviour
                     board[i][j].ToggleFlag();               
     }
 
-    //IEnumerator InvertControls()
-    //{
-    //}
+    public void InvertControls()
+    {
+        StartCoroutine(InvertControlsEnum());
+    }
+
+    IEnumerator InvertControlsEnum()
+    {
+        KeyCode htmp = left, htmp2 = right;
+        left = right;
+        right = htmp;
+
+        KeyCode vtmp = up, vtmp2 = down;
+        up = down;
+        down = vtmp;
+
+        yield return new WaitForSeconds(5);
+
+        left = right;
+        right = htmp2;
+        up = down;
+        down = vtmp2;
+    }
 
 
     IEnumerator QuickShow()
@@ -213,24 +276,62 @@ public class Board : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
+        if (gameOver) return;
+
+        if (Input.GetKeyDown(up) && pos.y != 0)
         {
-            Debug.Log("pressed 1");
+            pos.y -= 1;
+            cursor.transform.position = transform.position + new Vector3(pos.x, -pos.y, 0) * 0.4f;
+        }
+
+        else if (Input.GetKeyDown(down) && pos.y != height - 1)
+        {
+            pos.y += 1;
+            cursor.transform.position = transform.position + new Vector3(pos.x, -pos.y, 0) * 0.4f;
+        }
+
+        else if (Input.GetKeyDown(left) && pos.x != 0)
+        {
+            pos.x -= 1;
+            cursor.transform.position = transform.position + new Vector3(pos.x, -pos.y, 0) * 0.4f;
+        }
+
+        else if (Input.GetKeyDown(right) && pos.x != -width + 1)
+        {
+            pos.x += 1;
+            cursor.transform.position = transform.position + new Vector3(pos.x, -pos.y, 0) * 0.4f;
+        }
+
+        else if (Input.GetKeyDown(lclick))
+        {
+            Click(pos.x, pos.y);
+        }
+
+        else if (Input.GetKeyDown(rclick))
+        {
+            board[pos.x][pos.y].ToggleFlag();
+        }
+        
+
+        if (Input.GetKeyDown(power1))
+        {
+            Debug.Log("pressed power1");
             powerup = true;
             powers.Remove(Power.ShowBoard);
             PowerUp(Power.ShowBoard);
         }
 
-        else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
+        else if (Input.GetKeyDown(power2))
         {
-            Debug.Log("pressed 2");
+            Debug.Log("pressed power2");
             powerup = true;
             powers.Remove(Power.RemoveFlags);
             PowerUp(Power.RemoveFlags);
         }
 
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        else if (Input.GetKeyDown(power3))
         {
+            Debug.Log("pressed power3");
             powerup = true;
             powers.Remove(Power.InvertControls);
             PowerUp(Power.InvertControls);

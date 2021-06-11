@@ -45,6 +45,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TileObject: {fileID: 4683039920485318962, guid: 7ddaf9b90a0f5804a8971476951e5153,
     type: 3}
+  pcursor1: {fileID: 4150722123882329837, guid: b02e28e2d901c8843b05af77a0c611ab,
+    type: 3}
+  pcursor2: {fileID: 5667642656280734728, guid: 1c17c94a9a1a0094195a0be4e5da52e3,
+    type: 3}
   powerup: 1
   powers: 
   lives: 3

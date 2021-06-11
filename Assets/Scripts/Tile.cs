@@ -49,19 +49,6 @@ public class Tile : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
     }
 
-    private void OnMouseOver()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (!flag)
-                Click();
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            ToggleFlag();
-        }
-    }
-
     public void Click()
     {
         board.Click(x, y);
