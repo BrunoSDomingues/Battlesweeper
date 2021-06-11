@@ -196,6 +196,7 @@ public class Board : MonoBehaviour
         {
             if (!board[x][y].shown)
             {
+                controller.bomb.Play();
                 lives--;
                 Debug.Log("lives: " + lives);
                 if (lives == 0)
@@ -375,6 +376,7 @@ public class Board : MonoBehaviour
         else if (Input.GetKeyDown(rclick))
         {
             board[pos.x][pos.y].ToggleFlag();
+            controller.flag.Play();
         }
         
 

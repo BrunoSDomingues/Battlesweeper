@@ -23,6 +23,8 @@ public class Controller : MonoBehaviour
 
     private string message;
 
+    public AudioSource bomb, flag;
+
     // Start is called before the first frame update
     void Start()
     {
