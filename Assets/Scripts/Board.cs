@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // ShowBoard cannot be called before first click, need to check
 public enum Power
@@ -31,8 +32,8 @@ public class Board : MonoBehaviour
     public List<Power> powers = new List<Power>();
     private bool firstClick = true;
     public bool gameOver = false;
-    public int lives = 3;
-
+    public int lives;
+  
     private Vector2Int pos = new Vector2Int();
 
     private KeyCode up, down, left, right, power1, power2, power3, lclick, rclick;
@@ -49,9 +50,6 @@ public class Board : MonoBehaviour
         controller = controller_;
 
         // No need to place mines before first click
-        powers.Add(Power.ShowBoard);
-        for (int i = 0; i < 2; i++) powers.Add(Power.RemoveFlags);
-        for (int i = 0; i < 3; i++) powers.Add(Power.InvertControls);
         CreateBoard();
 
         if (player)
@@ -82,6 +80,17 @@ public class Board : MonoBehaviour
 
             cursor = Instantiate(pcursor2, new Vector3(1, 3, 0), Quaternion.identity);
         }
+
+        if (controller.isTA) lives = 1;
+        else
+        {
+            lives = 3;
+
+            powers.Add(Power.ShowBoard);
+            for (int i = 0; i < 2; i++) powers.Add(Power.RemoveFlags);
+            for (int i = 0; i < 3; i++) powers.Add(Power.InvertControls);
+        }
+            
     }
 
     private void SetMines(int x, int y)
@@ -141,6 +150,16 @@ public class Board : MonoBehaviour
         }
     }
 
+    public int countShown()
+    {
+        int empty = 0;
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+                if (board[i][j].shown) empty++;
+
+        return empty;
+    }
+
     public void Click(int x, int y)
     {
         if (gameOver) return;
@@ -157,7 +176,7 @@ public class Board : MonoBehaviour
                 Debug.Log("lives: " + lives);
                 if (lives == 0)
                 {
-                    controller.GameOver(player);
+                    controller.GameOver(player, false);
                     RevealAll();
                 }
                 else board[x][y].Reveal();
@@ -172,7 +191,7 @@ public class Board : MonoBehaviour
                     if (!board[i][j].mine && !board[i][j].shown) cond = false;
             if (cond)
             {
-                controller.GameOver(!player);
+                controller.GameOver(!player, false);
                 for (int i = 0; i < height; i++)
                     for (int j = 0; j < width; j++)
                         if (board[i][j].mine && !board[i][j].flag) board[i][j].ToggleFlag();
@@ -189,10 +208,27 @@ public class Board : MonoBehaviour
 
     public void PowerUp(Power p)
     {
+        bool r1, r2, r3;
+        
         if (!powerup) return;
-        else if (p == Power.ShowBoard) StartCoroutine(QuickShow());
-        else if (p == Power.RemoveFlags) controller.PowerUp(player, p);
-        else if (p == Power.InvertControls) controller.PowerUp(player, p);
+        else if (p == Power.ShowBoard)
+        {
+            r1 = powers.Remove(p);
+            if (r1) StartCoroutine(QuickShow());
+        }
+
+        else if (p == Power.RemoveFlags)
+        {
+            r2 = powers.Remove(p);
+            if (r2) controller.PowerUp(player, p);
+        }
+
+        else if (p == Power.InvertControls)
+        {
+            r3 = powers.Remove(p);
+            if (r3) controller.PowerUp(player, p);
+        }
+            
     }
 
     public void RemoveFlags()
@@ -317,7 +353,6 @@ public class Board : MonoBehaviour
         {
             Debug.Log("pressed power1");
             powerup = true;
-            powers.Remove(Power.ShowBoard);
             PowerUp(Power.ShowBoard);
         }
 
@@ -325,7 +360,6 @@ public class Board : MonoBehaviour
         {
             Debug.Log("pressed power2");
             powerup = true;
-            powers.Remove(Power.RemoveFlags);
             PowerUp(Power.RemoveFlags);
         }
 
@@ -333,7 +367,6 @@ public class Board : MonoBehaviour
         {
             Debug.Log("pressed power3");
             powerup = true;
-            powers.Remove(Power.InvertControls);
             PowerUp(Power.InvertControls);
         }
     }

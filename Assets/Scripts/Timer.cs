@@ -1,0 +1,38 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Timer : MonoBehaviour
+{
+    private Controller controller;
+    public float timer;
+    public bool isEnabled = false;
+    public int e1, e2;
+
+    public void New(float time, Controller controller_)
+    {
+        timer = time;
+        controller = controller_;
+        isEnabled = true;
+        StartCoroutine(Countdown());
+    }
+
+    IEnumerator Countdown()
+    {
+        while (timer > 0 && isEnabled)
+        {
+            Debug.Log("timer: " + timer);
+            yield return new WaitForSeconds(1.0f);
+            timer--;
+        }
+        timer = 0;
+        isEnabled = false;
+
+        e1 = controller.b1.countShown();
+        e2 = controller.b2.countShown();
+
+        if (e1 > e2) controller.GameOver(false, false);
+        else if (e1 < e2) controller.GameOver(true, false);
+        else controller.GameOver(true, true);
+    }
+}

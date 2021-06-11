@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 public class Controller : MonoBehaviour
 {
     [SerializeField]
-    GameObject board;
+    GameObject board, timer;
 
-    private Board b1, b2;
+    public Board b1, b2;
+    private Timer t;
+    public bool isTA = false;
     public string message;
 
     // Start is called before the first frame update
@@ -21,15 +23,21 @@ public class Controller : MonoBehaviour
         b2 = Instantiate(board, new Vector3(1, 3, 0), Quaternion.identity).GetComponent<Board>();
         b2.New(16, 16, 40, false, this);
 
-        Debug.Log(SceneManager.GetActiveScene().name);
+        if (SceneManager.GetActiveScene().name == "TimeAttack")
+        {
+            isTA = true;
+            t = Instantiate(timer, new Vector3(0, 4, 0), Quaternion.identity).GetComponent<Timer>();
+            t.New(5f, this);
+        }
     }
 
-    public void GameOver(bool player)
+    public void GameOver(bool player, bool isTie)
     {
         b1.gameOver = true;
         b2.gameOver = true;
 
-        if (!player) message = "Player 1 wins!";
+        if (isTA && isTie) message = "It's a tie!";
+        else if (!player) message = "Player 1 wins!";
         else message = "Player 2 wins!";
         Debug.Log(message);
     }

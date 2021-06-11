@@ -314,8 +314,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 4929211270570482231, guid: 787b9d0885190514cadf28f95e9651da, type: 3}
-  cursor1: {fileID: 4150722123882329837, guid: b02e28e2d901c8843b05af77a0c611ab, type: 3}
-  cursor2: {fileID: 5667642656280734728, guid: 1c17c94a9a1a0094195a0be4e5da52e3, type: 3}
+  timer: {fileID: 1456423571}
+  isTA: 0
+  message: 
+--- !u!1 &1456423571
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1456423572}
+  - component: {fileID: 1456423573}
+  m_Layer: 0
+  m_Name: Timer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1456423572
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456423571}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 4, z: -150.375}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1456423573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456423571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 549ddd308790f3648aeac94af93235d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: 0
+  isEnabled: 0
 --- !u!1001 &4150722124728571148
 PrefabInstance:
   m_ObjectHideFlags: 0
