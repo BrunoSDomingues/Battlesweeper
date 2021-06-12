@@ -31,16 +31,16 @@ public class Controller : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "TimeAttack")
         {
             isTA = true;
-            t = Instantiate(timer, new Vector3(0, 4, 0), Quaternion.identity).GetComponent<Timer>();
-            t.New(5f, timerText, this);
+            t = Instantiate(timer, new Vector3(0, 3, 0), Quaternion.identity).GetComponent<Timer>();
+            t.New(120f, timerText, this);
         }
 
         else isTA = false;
 
-        b1 = Instantiate(board, new Vector3(-8, 3, 0), Quaternion.identity).GetComponent<Board>();
+        b1 = Instantiate(board, new Vector3(-8, 2, 0), Quaternion.identity).GetComponent<Board>();
         b1.New(16, 16, 40, true, this, p11, p12, p13, nLives1);
 
-        b2 = Instantiate(board, new Vector3(2, 3, 0), Quaternion.identity).GetComponent<Board>();
+        b2 = Instantiate(board, new Vector3(2, 2, 0), Quaternion.identity).GetComponent<Board>();
         b2.New(16, 16, 40, false, this, p21, p22, p23, nLives2);
         
     }

@@ -74,7 +74,7 @@ public class Board : MonoBehaviour
             lclick = KeyCode.Q;
             rclick = KeyCode.E;
 
-            cursor = Instantiate(pcursor1, new Vector3(-8, 3, 0), Quaternion.identity);
+            cursor = Instantiate(pcursor1, new Vector3(-8, 2, 0), Quaternion.identity);
         }
         else
         {
@@ -88,12 +88,12 @@ public class Board : MonoBehaviour
             lclick = KeyCode.U;
             rclick = KeyCode.O;
 
-            cursor = Instantiate(pcursor2, new Vector3(2, 3, 0), Quaternion.identity);
+            cursor = Instantiate(pcursor2, new Vector3(2, 2, 0), Quaternion.identity);
         }
 
         if (controller.isTA)
         {
-            lives = 1;
+            lives = 2;
             p1.enabled = false;
             p2.enabled = false;
             p3.enabled = false;
@@ -185,7 +185,7 @@ public class Board : MonoBehaviour
 
     public void Click(int x, int y)
     {
-        if (gameOver) return;
+        if (gameOver || board[x][y].flag) return;
         if (firstClick)
         {
             SetMines(x, y);
@@ -384,7 +384,7 @@ public class Board : MonoBehaviour
             p2.text = "Remove: " + n2;
             p3.text = "Invert: " + n3;
 
-            if (Input.GetKeyDown(power1))
+            if (Input.GetKeyDown(power1) && !firstClick)
             {
                 powerup = true;
                 PowerUp(Power.ShowBoard);
